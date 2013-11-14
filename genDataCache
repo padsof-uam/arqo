@@ -1,0 +1,19 @@
+#!/bin/bash
+
+minsize=10
+inc=16
+maxsize=200
+rm -f *.dat
+
+for i in $(seq $minsize $inc $maxsize)
+do
+	echo -n -e "\r$i"
+	tslow=$(valgrind --tool=cachegrind ./slow $i 2>&1 > /dev/null | grep 'D1' | head -n 1 | awk '{print $6"\t"$9}')
+	tslowRead=$(echo $tslow | awk '{print $1}')
+	tslowWrite=$(echo $tslow | awk '{print $2}')
+	tfast=$(valgrind --tool=cachegrind ./fast $i 2>&1 > /dev/null | grep 'D1' | head -n 1 | awk '{print $6"\t"$9}')
+	tfastRead=$(echo $tfast | awk '{print $1}')
+	tfastWrite=$(echo $tfast | awk '{print $2}')
+	echo $i $tslowWrite $tfastWrite >> 'tamCacheWrite.dat'
+	echo $i $tslowRead $tfastRead >> 'tamCacheRead.dat'
+done

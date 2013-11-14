@@ -1,0 +1,7 @@
+*.dSYM
+slow
+fast
+*.o
+*.out.*
+*.dat
+!data/*
