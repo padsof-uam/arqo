@@ -64,6 +64,18 @@ num ** generateEmptyMatrix(int size)
 	return matrix;
 }
 
+ 
+void printMatrix(num** m, int n)
+{
+	int i, j;
+	for(i = 0; i < n; i++)
+	{
+		for(j = 0; j < n; j++)
+			printf("%lf\t", m[i][j]);
+		printf("\n");
+	}
+}
+
 
 void freeMatrix(num **matrix)
 {
