@@ -6,3 +6,5 @@ fast
 *.dat
 !data/*
 *.sublime-*
+mult_great
+mult_norm

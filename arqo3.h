@@ -14,5 +14,6 @@
 num ** generateMatrix(int);
 num ** generateEmptyMatrix(int);
 void freeMatrix(num **);
+void printMatrix(num**, int);
 
 #endif /* _ARQO_P3_H_ */
