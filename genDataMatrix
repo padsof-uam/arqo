@@ -5,16 +5,23 @@ inc=16
 P=10
 #maxsize=$(echo 2048+$P | bc)
 maxsize=52
-rm -f *.dat
-tam_2=$(echo "$((8 * 1024))" | bc -l)
-echo $tam_2
-tam=$(echo "$j*$P*1024" | bc -l)
+rm -f matrix.dat
+getData() {
+	tam=$2
+	file=$1
+	out=$3
+	valgrind_out=$(valgrind --tool=cachegrind $file $tam 2>&1) 
+	cache_misses_write=$(echo $valgrind_out | grep 'D1' | head -n 1 | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	cache_misses_read=$(echo $valgrind_out | grep 'D1' | head -n 1 | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	exec_time=$(echo $valgrind_out | grep 'Execution time:' | awk -v FS=":" '{print $2}')
+	echo -n $exec_time $cache_misses >> $3
+}
+
 for i in $(seq $minsize $inc $maxsize)
 do
 	echo -n -e "\r$i"
-	tnorm=$(valgrind --tool=cachegrind ./mult_norm $i 2>&1) 
-	tgreat=$(valgrind --tool=cachegrind ./mult_great $i 2>&1)
-	tnorm=$(echo $tnorm | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-	tgreat=$(echo $tgreat | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-	echo $i $tnorm $tgreat >> 'tamCache_'$tam'.dat'
+	echo -n "$i" >> "matrix.dat"
+	genData "./mult_norm" $i "matrix.dat"
+	genData "./mult_great" $i "matrix.dat"
+	echo "" >> "matrix.dat"
 done
