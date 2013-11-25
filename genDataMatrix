@@ -4,24 +4,25 @@ minsize=10
 inc=16
 P=10
 #maxsize=$(echo 2048+$P | bc)
-maxsize=52
+maxsize=11
 rm -f matrix.dat
 getData() {
 	tam=$2
 	file=$1
 	out=$3
-	valgrind_out=$(valgrind --tool=cachegrind $file $tam 2>&1) 
-	cache_misses_write=$(echo $valgrind_out | grep 'D1' | head -n 1 | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-	cache_misses_read=$(echo $valgrind_out | grep 'D1' | head -n 1 | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-	exec_time=$(echo $valgrind_out | grep 'Execution time:' | awk -v FS=":" '{print $2}')
-	echo -n $exec_time $cache_misses >> $3
+	valgrind --tool=cachegrind $file $tam &> valgrind.out 
+	cache_misses_write=$(cat valgrind.out | grep 'D1' | head -n 1 | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	cache_misses_read=$(cat valgrind.out | grep 'D1' | head -n 1 | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	exec_time=$(cat valgrind.out | grep 'Execution time:' | awk -v FS=":" '{print $2}')
+	echo -n  " " $exec_time $cache_misses_write $cache_misses_read  >> $3
+	rm valgrind.out
 }
 
 for i in $(seq $minsize $inc $maxsize)
 do
 	echo -n -e "\r$i"
-	echo -n "$i" >> "matrix.dat"
-	genData "./mult_norm" $i "matrix.dat"
-	genData "./mult_great" $i "matrix.dat"
+	echo -n $i >> "matrix.dat"
+	getData "./mult_norm" $i "matrix.dat"
+	getData "./mult_great" $i "matrix.dat"
 	echo "" >> "matrix.dat"
 done
