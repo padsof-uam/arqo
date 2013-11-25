@@ -1,0 +1,29 @@
+#!/bin/bash
+
+minsize=10
+inc=16
+P=8
+maxsize=$(echo 2048+$P | bc)
+rm -f data/matrix.dat
+
+getData() {
+	tam=$2
+	file=$1
+	out=$3
+	valgrind --tool=cachegrind $file $tam &> valgrind.out 
+	cache_misses_write=$(cat valgrind.out | grep 'D1' | head -n 1 | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	cache_misses_read=$(cat valgrind.out | grep 'D1' | head -n 1 | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+	exec_time=$(cat valgrind.out | grep 'Execution time:' | awk -v FS=":" '{print $2}')
+	echo -n  " " $exec_time $cache_misses_write $cache_misses_read  >> $3
+	rm valgrind.out
+}
+
+for i in $(seq $minsize $inc $maxsize)
+do
+	echo -n -e "\r$i"
+	echo -n $i >> "data/matrix.dat"
+	getData "./bin/mult_norm" $i "data/matrix.dat"
+	getData "./bin/mult_great" $i "data/matrix.dat"
+	echo "" >> "data/matrix.dat"
+done
+rm cachegrind.out.*

@@ -1,0 +1,13 @@
+#!/bin/bash
+minsize=10
+inc=16
+maxsize=2058
+rm -f results
+
+for i in $(seq $minsize $inc $maxsize)
+do
+	echo -n -e "\r$i"
+	tslow=$(./bin/slow $i | grep time | awk -v FS="e: " '{print $2}')
+	tfast=$(./bin/fast $i | grep time | awk -v FS="e: " '{print $2}')
+	echo $i $tslow $tfast >> 'data/results'
+done

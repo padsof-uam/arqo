@@ -6,21 +6,21 @@ FLAGS = -g -Wall -D_GNU_SOURCE
 
 all: fast slow mult_norm mult_great
 
-fast: fast.c arqo3.c
-	gcc $(FLAGS) $(LIB_DIR) -o $@ $^ $(LIBS)
+fast: src/fast.c src/arqo3.c
+	gcc $(FLAGS) $(LIB_DIR) -o bin/$@ $^ $(LIBS)
 
-slow: slow.c arqo3.c
-	gcc $(FLAGS) $(LIB_DIR) -o $@ $^ $(LIBS)
+slow: src/slow.c src/arqo3.c
+	gcc $(FLAGS) $(LIB_DIR) -o bin/$@ $^ $(LIBS)
 
-mult_norm: mult_norm.c arqo3.c
-	gcc $(FLAGS) $(LIB_DIR) -o $@ $^ $(LIBS)
+mult_norm: src/mult_norm.c src/arqo3.c
+	gcc $(FLAGS) $(LIB_DIR) -o bin/$@ $^ $(LIBS)
 
-mult_great: mult_great.c arqo3.c
-	gcc $(FLAGS) $(LIB_DIR) -o $@ $^ $(LIBS)
+mult_great: src/mult_great.c src/arqo3.c
+	gcc $(FLAGS) $(LIB_DIR) -o bin/$@ $^ $(LIBS)
 
 
-ej1: ej1.c arqo3.c
-	gcc $(FLAGS) $(LIB_DIR) -o $@ $^ $(LIBS)
+ej1: src/ej1.c src/arqo3.c
+	gcc $(FLAGS) $(LIB_DIR) -o bin/$@ $^ $(LIBS)
 
 clean:
-	rm -f *.o *~ fast slow 
+	rm -f *.o *~ fast slow mult_norm mult_great bin/*

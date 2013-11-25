@@ -1,0 +1,23 @@
+#!/bin/bash
+
+minsize=10
+inc=16
+P=8
+maxsize=$(echo 2048+$P | bc)
+rm -f *.dat
+tam_2=$(echo "$((8 * 1024))" | bc -l)
+echo $tam_2
+for j in {1,2,4,8}
+do
+	tam=$(echo "$j*$P*1024" | bc -l)
+	for i in $(seq $minsize $inc $maxsize)
+	do
+		echo -n -e "\r$i"
+		tslow=$(valgrind --tool=cachegrind --I1=$tam,1,64 --D1=$tam,1,64 --LL=8192,1,64 ./bin/slow $i 2>&1 > /dev/null | grep 'D1' | head -n 1)
+		tfast=$(valgrind --tool=cachegrind --I1=$tam,1,64 --D1=$tam,1,64 --LL=8192,1,64 ./bin/fast $i 2>&1 > /dev/null | grep 'D1' | head -n 1)
+		tslow=$(echo $tslow | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+		tfast=$(echo $tfast | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
+		echo $i $tslow $tfast >> 'data/tamCache_'$tam'.dat'
+	done
+done
+rm -f cachegrind.out.*
