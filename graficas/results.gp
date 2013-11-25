@@ -1,5 +1,5 @@
 set terminal pngcairo
-set output graficas/ejercicio1.png
+set output graficas/fotos/ejercicio1.png
 set xlabel "Tamaño de la matriz"
 set ylabel "Tiempo de ejecución (s)"
 set key left

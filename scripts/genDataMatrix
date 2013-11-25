@@ -26,4 +26,3 @@ do
 	getData "./bin/mult_great" $i "data/matrix.dat"
 	echo "" >> "data/matrix.dat"
 done
-rm cachegrind.out.*

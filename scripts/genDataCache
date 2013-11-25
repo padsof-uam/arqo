@@ -20,4 +20,3 @@ do
 		echo $i $tslow $tfast >> 'data/tamCache_'$tam'.dat'
 	done
 done
-rm -f cachegrind.out.*

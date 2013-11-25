@@ -1,4 +1,4 @@
-#º/bin/bash
+#!/bin/bash
 make clean && make
 ./genData
 ./genDataCache
@@ -12,5 +12,5 @@ make clean && make
 gnuplot graficas/*.gp
 
 
-
 #Limpia
+rm *.out.*
