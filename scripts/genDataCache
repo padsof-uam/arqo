@@ -4,19 +4,29 @@ minsize=10
 inc=16
 P=8
 maxsize=$(echo 2048+$P | bc)
-rm -f *.dat
+rm -f data/tamCache_*.dat
 tam_2=$(echo "$((8 * 1024))" | bc -l)
-echo $tam_2
+echo "#########################################" >> control.txt
+echo "Empezando genDataCache" >> control.txt
 for j in {1,2,4,8}
 do
 	tam=$(echo "$j*$P*1024" | bc -l)
 	for i in $(seq $minsize $inc $maxsize)
 	do
-		echo -n -e "\r$i"
+		echo -n -e "$i" >> control.txt
+		
 		tslow=$(valgrind --tool=cachegrind --I1=$tam,1,64 --D1=$tam,1,64 --LL=8192,1,64 ./bin/slow $i 2>&1 > /dev/null | grep 'D1' | head -n 1)
+		tslow_write=$(echo $tslow | awk -v FS="+" '{print $2}' | awk -v FS="wr" '{print $1}' | sed 's/,//g')
+		tslow_read=$(echo $tslow | awk -v FS="(" '{print $2}' | awk -v FS="rd" '{print $1}' | sed 's/,//g')
+		
 		tfast=$(valgrind --tool=cachegrind --I1=$tam,1,64 --D1=$tam,1,64 --LL=8192,1,64 ./bin/fast $i 2>&1 > /dev/null | grep 'D1' | head -n 1)
-		tslow=$(echo $tslow | awk -v FS="+" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-		tfast=$(echo $tfast | awk -v FS="(" '{print $2}' | awk -v FS=" " '{print $1}' | sed 's/,//g')
-		echo $i $tslow $tfast >> 'data/tamCache_'$tam'.dat'
+		tfast_write=$(echo $tfast | awk -v FS="+" '{print $2}' | awk -v FS="wr" '{print $1}' | sed 's/,//g')
+		tfast_read=$(echo $tfast | awk -v FS="(" '{print $2}' | awk -v FS="rd" '{print $1}' | sed 's/,//g')	
+		echo $i $tslow_write  $tslow_read $tfast_write $tfast_read 
+		echo $i $tslow_write  $tslow_read $tfast_write $tfast_read >> 'data/tamCache_'$tam'.dat'
 	done
+	echo vamos por $tam >> control.txt
+	echo " " >> control.txt
 done
+echo "#########################################">> control.txt
+echo "hecho genDataCache">> control.txt
