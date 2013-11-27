@@ -1,5 +1,7 @@
 \documentclass[nochap]{apuntes}
 
+\usepackage{listings}
+
 \title{Memoria de la práctica 3}
 \author{Guillermo Julián y Víctor de Juan}
 \date{20/11/2013}
@@ -17,34 +19,36 @@
 \todo{Hay que ejecutar en el Lab...}
 \section{Ejercicio 1}
 
-Esta es la gráfica generada con el script genData, que ejecuta los programas slow y fast guardando los tiempos de ejecución en un fichero (data/results)
+Esta es la gráfica generada con el script \texttt{genData}, que ejecuta los programas \texttt{slow} y \texttt{fast} guardando los tiempos de ejecución en un fichero (data/results)
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{graficas/fotos/ejercicio1.png}
 \end{center}
 
-Podemos comprobar claramente que el programa \emph{slow} es más lento que el \emph{fast}.
+Podemos comprobar claramente que el programa \texttt{slow} es más lento que el \texttt{fast}.
 
-Examinando el código fuente vemos que el bucle de \emph{fast} es:
+Examinando el código fuente vemos que el bucle de \texttt{fast} es:
 
-\todo{Alguna forma de ponerlo bonito}
-	for(i=0;i<n;i++)
-		for(j=0;j<n;j++)
-			sum += matrix[i][j];
+\begin{lstlisting}[language=c]
+for(i=0;i<n;i++)
+	for(j=0;j<n;j++)
+		sum += matrix[i][j];
+\end{lstlisting}
+y el código fuente de \texttt{slow} es:
 
-y el código fuente de slow es:
+\begin{lstlisting}[language=c]
+for(i=0;i<n;i++)
+	for(j=0;j<n;j++)
+		sum += matrix[j][i];
+\end{lstlisting}
 
-	for(i=0;i<n;i++)
-		for(j=0;j<n;j++)
-			sum += matrix[j][i];
+Aquí se encuentra la única diferencia existente en el código, la indexación de las matrices. En \texttt{fast} se recorre por filas y en \texttt{slow} por columnas.
 
-Aquí se encuentra la única diferencia existente en el código, la indexación de las matrices. En fast se recorre por filas y en slow por columnas.
-
-Otro factor importante es la reserva de memoria, en la que se reserva memoria en 2 bloques de tal manera que todos las las filas de la matriz se encontrarán una seguida de otra en la memoria.
+Otro factor importante es la reserva de memoria. Al reservarse memoria en 2 bloques, todas las filas de la matriz se encontrarán una seguida de otra en la memoria.
 
 Gracias a estos 2 factores podemos explicar la diferencia de tiempos de ejecución vista en las gráficas.
 
-Esto se debe al principio de proxmidad de los datos de la caché. Por como está reservada la memoria, cada fila está almacenada probablemente en un mismo bloque (y sino en bloques contiguos) que se guarda en la caché cada vez que se referencia un elemento del bloque, de tal manera que podemos tener la fila entera en la caché. Si recorremos la matriz fila a fila nos aprovechamos de este principio consiguiendo una mayor utilización productiva de la caché. En cambio, si recorremos la matriz columna a columna, es muy probable que el elemento referenciado no se encuentre en el mismo bloque que el siguiente, de tal manera que en la mayoría de las lecturas se produce un fallo de caché porque los bloques guardados contienen los elementos de la misma fila y no de las columnas siguientes.
+Esto se debe al principio de proximidad de los datos de la caché. Por como está reservada la memoria, cada fila está almacenada probablemente en un mismo bloque (y sino en bloques contiguos) que se guarda en la caché cada vez que se referencia un elemento del bloque, de tal manera que podemos tener la fila entera en la caché. Si recorremos la matriz fila a fila nos aprovechamos de este principio consiguiendo una mayor utilización productiva de la caché. En cambio, si recorremos la matriz columna a columna, es muy probable que el elemento referenciado no se encuentre en el mismo bloque que el siguiente, de tal manera que en la mayoría de las lecturas se produce un fallo de caché porque los bloques guardados contienen los elementos de la misma fila y no de las columnas siguientes.
 
 Esta hipótesis la contrasta el ejercicio 2, en el que comprobamos la diferencia de los fallos de caché.
 
@@ -54,7 +58,7 @@ Aquí presentamos las 4 gráficas asociadas a los 4 tamaños pedidos. Piden util
 
 Los datos han sido generados con el script genDataCaché, que va ejecutando \emph{slow} y \emph{fast} simulando con cachegrind distintos tamaños de caché. Los datos se almacenan en ficheros de la forma tamCache\_tamaño.dat en el directorio data. 
 
-Después hemos generado los scripts de gnuplot con genDataCache.sh, para generar 1 script gnuplot por cada tamaño de la caché.
+Después hemos generado los scripts de \texttt{gnuplot} con \texttt{genDataCache.sh}, para generar un script gnuplot por cada tamaño de la caché.
 
 En todos los casos los fallos de escritura en caché son los mismo (en la gráfica no se aprecia pero en los ficheros de datos se ve claramente), pero los fallos de lectura de caché si son muy distintos, corroborando la hipótesis del ejercicio 1, que la diferencia de tiempos de ejecución la provocan los fallos de caché.
 
@@ -144,7 +148,10 @@ Lo mismo sucede en este caso, con los fallos de escritura.
 
 \subsection{Pregunta}\emph{¿Se observan cambios en la tendencia al aumentar el tamaño de las matrices?}
 
-Obviamente al aumentar el tamaño de la matriz aumentan los tiempos de ejecución y los fallos de caché (tanto de lectura como de escritura)
+Obviamente al aumentar el tamaño de la matriz aumentan los tiempos de ejecución y los fallos de caché (tanto de lectura como de escritura).
 
-\todo{Justificación del efecto xk great es mejor}
+\subsection{Pregunta}\emph{¿Por qué cambia el comportamiento entre la multiplicación normal y la transpuesta?}
+
+Al transponer la matriz, indexamos ambas matrices por filas. Dado que al reservar la memoria cada fila corresponde a un único bloque de memoria, es más probable que en la caché estén las filas contiguas y tengamos menos fallos de caché que al indexar por columnas.
+
  \end{document}
