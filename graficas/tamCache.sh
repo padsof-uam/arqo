@@ -7,6 +7,7 @@ do
 	echo $tam
 	echo set terminal png > graficas/tamCache_$tam.gp
 	echo set output '"'graficas/fotos/Cache_$tam.png'"' >> graficas/tamCache_$tam.gp
+	echo set xrange [0:2058] >> graficas/tamCache_$tam.gp
 	echo set xlabel '"'"Tamaño ("$tam")"'"'  >> graficas/tamCache_$tam.gp
 	echo set ylabel '"'"Fallos en la caché de Datos (nivel 1)"'"'  >> graficas/tamCache_$tam.gp
 	echo set key left  >> graficas/tamCache_$tam.gp
