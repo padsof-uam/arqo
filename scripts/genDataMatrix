@@ -21,8 +21,8 @@ getData() {
 for i in $(seq $minsize $inc $maxsize)
 do
 	echo -n -e "\r$i"
-	echo -n $i >> "data/matrix.dat"
-	getData "./bin/mult_norm" $i "data/matrix.dat"
-	getData "./bin/mult_great" $i "data/matrix.dat"
-	echo "" >> "data/matrix.dat"
+	echo -n $i >> "data/ej3/matrix.dat"
+	getData "./bin/mult_norm" $i "data/ej3/matrix.dat"
+	getData "./bin/mult_great" $i "data/ej3/matrix.dat"
+	echo "" >> "data/ej3/matrix.dat"
 done

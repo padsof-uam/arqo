@@ -9,5 +9,5 @@ do
 	echo -n -e "\r$i"
 	tslow=$(./bin/slow $i | grep time | awk -v FS="e: " '{print $2}')
 	tfast=$(./bin/fast $i | grep time | awk -v FS="e: " '{print $2}')
-	echo $i $tslow $tfast >> 'data/results'
+	echo $i $tslow $tfast >> 'data/ej1/results'
 done
