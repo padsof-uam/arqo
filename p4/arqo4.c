@@ -128,3 +128,15 @@ int * generateEmptyIntVector(int size)
 	}
 	return array;
 }
+
+
+void parse_args(int argc, char ** argv, int * num_threads, int * size)
+{
+	*size = M;
+	*num_threads = 4;
+
+	if(argc >= 2)
+		*size = atoi(argv[1]);
+	if(argc >= 3)
+		*num_threads = atoi(argv[2]);
+}

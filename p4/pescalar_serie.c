@@ -1,16 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arqo4.h"
+#include <omp.h>
 
-int main(void)
+int main(int argc, char** argv)
 {
+	int num_threads, size;
 	float *A=NULL, *B=NULL;
 	long long k=0;
 	struct timeval fin,ini;
 	float sum=0;
+
+	parse_args(argc, argv, &num_threads, &size);	
+	omp_set_num_threads(num_threads);
 	
-	A = generateVector(M);
-	B = generateVector(M);
+	A = generateVector(size);
+	B = generateVector(size);
 	if ( !A || !B )
 	{
 		printf("Error when allocationg matrix\n");

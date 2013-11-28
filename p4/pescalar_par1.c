@@ -1,39 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arqo4.h"
+#include <omp.h>
 
-int main(void)
+int main(int argc, char **argv)
 {
-	float *A=NULL, *B=NULL;
-	long long k=0;
-	struct timeval fin,ini;
-	float sum=0;
-	
-	A = generateVector(M);
-	B = generateVector(M);
-	if ( !A || !B )
-	{
-		printf("Error when allocationg matrix\n");
-		freeVector(A);
-		freeVector(B);
-		return -1;
-	}
-	
-	gettimeofday(&ini,NULL);
-	/* Bloque de computo */
-	sum = 0;
-	#pragma omp parallel for
-	for(k=0;k<M;k++)
-	{
-		sum = sum + A[k]*B[k];
-	}
-	/* Fin del computo */
-	gettimeofday(&fin,NULL);
+    int num_threads, size;
+    float *A = NULL, *B = NULL;
+    long long k = 0;
+    struct timeval fin, ini;
+    float sum = 0;
 
-	printf("Resultado: %f\n",sum);
-	printf("Tiempo: %f\n", ((fin.tv_sec*1000000+fin.tv_usec)-(ini.tv_sec*1000000+ini.tv_usec))*1.0/1000000.0);
-	freeVector(A);
-	freeVector(B);
+    parse_args(argc, argv, &num_threads, &size);
+	omp_set_num_threads(num_threads);
 
-	return 0;
+    A = generateVector(size);
+    B = generateVector(size);
+    if ( !A || !B )
+    {
+        printf("Error when allocationg matrix\n");
+        freeVector(A);
+        freeVector(B);
+        return -1;
+    }
+
+    gettimeofday(&ini, NULL);
+    /* Bloque de computo */
+    sum = 0;
+    #pragma omp parallel for
+    for (k = 0; k < size; k++)
+    {
+        sum = sum + A[k] * B[k];
+    }
+    /* Fin del computo */
+    gettimeofday(&fin, NULL);
+
+    printf("Resultado: %f\n", sum);
+    printf("Tiempo: %f\n", ((fin.tv_sec * 1000000 + fin.tv_usec) - (ini.tv_sec * 1000000 + ini.tv_usec)) * 1.0 / 1000000.0);
+    freeVector(A);
+    freeVector(B);
+
+    return 0;
 }
