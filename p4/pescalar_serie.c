@@ -3,17 +3,33 @@
 #include "arqo4.h"
 #include <omp.h>
 
+double compute(int size);
 int main(int argc, char** argv)
 {
-	int num_threads, size;
+	int num_threads, size, num_tries;
+	double acc = 0;
+
+	parse_args(argc, argv, &num_threads, &size, &num_tries);	
+	omp_set_num_threads(num_threads);
+
+	for(int i = 0; i < num_tries; i++)
+		acc += compute(size);
+
+	printf("%lf\n", acc / num_tries);
+	
+	
+
+	return 0;
+}
+
+double compute(int size)
+{
 	float *A=NULL, *B=NULL;
 	long long k=0;
 	struct timeval fin,ini;
 	float sum=0;
+	double t;
 
-	parse_args(argc, argv, &num_threads, &size);	
-	omp_set_num_threads(num_threads);
-	
 	A = generateVector(size);
 	B = generateVector(size);
 	if ( !A || !B )
@@ -21,6 +37,7 @@ int main(int argc, char** argv)
 		printf("Error when allocationg matrix\n");
 		freeVector(A);
 		freeVector(B);
+		abort();
 		return -1;
 	}
 	
@@ -34,10 +51,8 @@ int main(int argc, char** argv)
 	/* Fin del computo */
 	gettimeofday(&fin,NULL);
 
-	printf("Resultado: %f\n",sum);
-	printf("Tiempo: %f\n", ((fin.tv_sec*1000000+fin.tv_usec)-(ini.tv_sec*1000000+ini.tv_usec))*1.0/1000000.0);
+	t = ((fin.tv_sec*1000000+fin.tv_usec)-(ini.tv_sec*1000000+ini.tv_usec))*1.0/1000000.0;
 	freeVector(A);
 	freeVector(B);
 
-	return 0;
-}
+	return t;

@@ -5,13 +5,13 @@
 
 int main(int argc, char **argv)
 {
-    int num_threads, size;
+    int num_threads, size, num_tries;
     float *A = NULL, *B = NULL;
     long long k = 0;
     struct timeval fin, ini;
     float sum = 0;
 
-    parse_args(argc, argv, &num_threads, &size);
+    parse_args(argc, argv, &num_threads, &size, &num_tries);
 	omp_set_num_threads(num_threads);
 
     A = generateVector(size);

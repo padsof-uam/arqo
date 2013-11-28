@@ -15,6 +15,6 @@ float * generateVector(int);
 float * generateEmptyVector(int);
 int * generateEmptyIntVector(int);
 void freeVector(void *);
-void parse_args(int, char **, int *, int *);
+void parse_args(int, char **, int *, int *, int*);
 
 #endif /* _ARQO_P3_H_ */
