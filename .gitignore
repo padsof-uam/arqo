@@ -45,3 +45,8 @@ bin/*
 !_*.pdf
 *.bak
 Icon*
+omp1
+omp2
+pescalar_serie
+pescalar_par1
+pescalar_par2
