@@ -44,7 +44,7 @@ double compute(int size)
 	gettimeofday(&ini,NULL);
 	/* Bloque de computo */
 	sum = 0;
-	for(k=0;k<M;k++)
+	for(k=0;k<size;k++)
 	{
 		sum = sum + A[k]*B[k];
 	}
