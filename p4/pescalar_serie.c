@@ -6,13 +6,13 @@
 double compute(int size);
 int main(int argc, char** argv)
 {
-	int num_threads, size, num_tries;
+	int i,num_threads, size, num_tries;
 	double acc = 0;
 
 	parse_args(argc, argv, &num_threads, &size, &num_tries);	
 	omp_set_num_threads(num_threads);
 
-	for(int i = 0; i < num_tries; i++)
+	for(i = 0; i < num_tries; i++)
 		acc += compute(size);
 
 	printf("%lf\n", acc / num_tries);
@@ -56,3 +56,4 @@ double compute(int size)
 	freeVector(B);
 
 	return t;
+}
