@@ -2,7 +2,7 @@
 import sys
 fname=sys.argv[1]
 f=open(fname,"r")
-fout=open("Ejer2_acc","w")
+fout=open("Ejer2_acc.dat","w")
 fout.write(f.readline())
 for line in f.readlines()[1:]:
 	values=line.split('\t')

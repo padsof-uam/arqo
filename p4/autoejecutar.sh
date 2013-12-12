@@ -2,14 +2,14 @@
 make clean
 make
 cd Ejer2
-./Ejerc2.sh > Ejer2.dat
+#./Ejerc2.sh > Ejer2.dat
 python preprocess.py Ejer2.dat
-gnuplot Ejer2.gp Ejer2_acc.gp
+gnuplot Ejer2_tiempos.gp Ejer2_acc.gp
 cd ../Ejer3
-./Ejer3.sh > Ejer3.dat
+#./Ejer3.sh > Ejer3.dat
 python preprocess.py Ejer3.dat
 gnuplot Ejer3_tiempos.gp Ejer3_acc.gp
 cd ..
-git add .
-git commit -m "Graficas generadas"
-git push
+#git add .
+#git commit -m "Graficas generadas"
+#git push
