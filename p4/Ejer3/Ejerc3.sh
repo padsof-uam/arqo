@@ -11,7 +11,7 @@ do
 	for i in $(seq 1 1 4)
 	do
 		echo -ne "\t"
-		echo -n $(bin/mults_$j $tam $i)
+		echo -n $(../bin/mults_$j $tam $i)
 	done
 	echo
 done
