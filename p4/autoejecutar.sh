@@ -9,4 +9,7 @@ cd ../Ejer3
 ./Ejer3.sh > Ejer3.dat
 python preprocess.py Ejer3.dat
 gnuplot Ejer3_tiempos.gp Ejer3_acc.gp
-
+cd ..
+git add .
+git commit -m "Graficas generadas"
+git push

@@ -2,7 +2,7 @@
 ejec=20
 
 echo "Ejercicio 2: Ejecutando serie, paralelo con 1,2,3,4 hilos." 1>&2
-echo "Tamaños: 1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000, 100000" 1>&2
+echo "Tamaños: 100000, 200000, 500000, 1000000, 2000000, 3000000, 4000000, 5000000, 10000000" 1>&2
 echo "N. medidas por ejecucion: $ejec" 1>&2
 echo -e "\"Tamaño\"\t\"Serie\"\t\t\"1 hilo\"\t\t\"2 hilos\"\t\t\"3 hilos\"\t\t\"4 hilos"
 for j in {100000,200000,500000,1000000,2000000,3000000,4000000,5000000,10000000}
