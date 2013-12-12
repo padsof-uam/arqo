@@ -5,4 +5,4 @@ set xlabel "Tamaño de la matriz"
 set ylabel "Tiempo de ejecución (s)"
 set key left
 set key outside
-plot for [col=2:6] 'Ejer2/Ejer2_acc.dat' using 0:col:xtic(1) with lines title columnheader
+plot for [col=2:6] 'Ejer3/Ejer3_acc.dat' using 0:col:xtic(1) with lines title columnheader
