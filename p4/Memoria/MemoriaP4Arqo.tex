@@ -1,0 +1,48 @@
+\documentclass{apuntes}
+
+\title{Pr\'{a}ctica 4 - ARQO}
+\date{Diciembre 2013}
+\author{V\'{i}ctor de Juan Sanz - Guillermo Juli\'{a}n Moreno}
+
+\begin{document}
+\maketitle
+\newpage
+
+\pagestyle{plain}
+
+\section*{Ejercicio 0}
+
+Características de las CPU de los ordenadores del laboratorio:
+
+\begin{description}
+\item[Número de cores físicos] 2.
+\item[Número de cores virtuales] 4.
+\item[Hyperthreading] Sí.
+\item[Frecuencia] $1.2\,\mathrm{GHz}$.
+\end{description}
+
+\section*{Ejercicio 1}
+
+\paragraph{¿Cómo se comporta OpenMP cuando declaramos una variable privada?} OpenMP declara instancias privadas de la variable por cada hilo que genera, de tal forma que cada hilo tiene su propia variable a cuyo valor no acceden el resto de hilos.
+
+\paragraph{¿Qué ocurre con el valor de una variable privada al comenzar a ejecutarse la región paralela?} Se inicializa al valor que tenía antes de comenzar la región paralela.
+
+\paragraph{¿Qué ocurre con el valor de una variable privada al finalizar la región paralela?} La variable privada mantiene el valor que tenía antes de ejecutarse la región paralela.
+
+\paragraph{¿Ocurre lo mismo con las variables públicas?} No, las variables públicas son accesibles por todos los hilos y por lo tanto cualquier modificación que hagan los hilos se mantendrá al acabar la región paralela.
+
+\section*{Ejercicio 2}
+
+El resultado es correcto en la versión en serie y en la versión 2 de la paralela. La versión 1 paralela no funciona porque al final no suma los resultados parciales de cada uno de los hilos. Además, en la versión 2 puede haber errores de redondeo en los números de coma flotante debido a que suma en un orden distinto al de la versión serie.
+
+
+% \easyimg{Ej2_Tiempos.png}{Tiempos de ejecución}{imgEj2Tiempos}
+% \easyimg{Ej2_Acel.png}{Aceleración}{imgEj2Accel}
+
+Para obtener mejores mediciones, hemos multiplicado por 100 los tamaños de matrices a ejecutar, de tal forma que las pequeñas variaciones que pueda introducir el SO no afecten tanto a la medición. También ejecutamos varias veces el bucle y obtenemos la media del tiempo de ejecución para evitar la aparición de medidas anómalas.
+
+\subsection*{Preguntas}
+
+\paragraph{En términos del tamaño de los vectores, ¿compensa siempre lanzar hilos para realizar el trabajo en paralelo, o hay casos en los que no?}
+
+\end{document}
