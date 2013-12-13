@@ -23,26 +23,72 @@ Características de las CPU de los ordenadores del laboratorio:
 
 \section*{Ejercicio 1}
 
-\paragraph{¿Cómo se comporta OpenMP cuando declaramos una variable privada?} OpenMP declara instancias privadas de la variable por cada hilo que genera, de tal forma que cada hilo tiene su propia variable a cuyo valor no acceden el resto de hilos.
+\paragraph{¿Cómo se comporta OpenMP cuando declaramos una variable privada?} 
 
-\paragraph{¿Qué ocurre con el valor de una variable privada al comenzar a ejecutarse la región paralela?} Se inicializa al valor que tenía antes de comenzar la región paralela.
+OpenMP declara instancias privadas de la variable por cada hilo que genera, de tal forma que cada hilo tiene su propia variable a cuyo valor no acceden el resto de hilos.
 
-\paragraph{¿Qué ocurre con el valor de una variable privada al finalizar la región paralela?} La variable privada mantiene el valor que tenía antes de ejecutarse la región paralela.
+\paragraph{¿Qué ocurre con el valor de una variable privada al comenzar a ejecutarse la región paralela?} 
 
-\paragraph{¿Ocurre lo mismo con las variables públicas?} No, las variables públicas son accesibles por todos los hilos y por lo tanto cualquier modificación que hagan los hilos se mantendrá al acabar la región paralela.
+Se inicializa al valor que tenía antes de comenzar la región paralela.
+
+\paragraph{¿Qué ocurre con el valor de una variable privada al finalizar la región paralela?}
+
+La variable privada mantiene el valor que tenía antes de ejecutarse la región paralela.
+
+\paragraph{¿Ocurre lo mismo con las variables públicas?} 
+
+No, las variables públicas son accesibles por todos los hilos y por lo tanto cualquier modificación que hagan los hilos se mantendrá al acabar la región paralela.
 
 \section*{Ejercicio 2}
 
 El resultado es correcto en la versión en serie y en la versión 2 de la paralela. La versión 1 paralela no funciona porque al final no suma los resultados parciales de cada uno de los hilos. Además, en la versión 2 puede haber errores de redondeo en los números de coma flotante debido a que suma en un orden distinto al de la versión serie.
 
-
-% \easyimg{Ej2_Tiempos.png}{Tiempos de ejecución}{imgEj2Tiempos}
-% \easyimg{Ej2_Acel.png}{Aceleración}{imgEj2Accel}
+\easyimg{img/ej2_tiempos.png}{Tiempos de ejecución}{imgEj2Tiempos}
+\easyimg{img/ej2_acc.png}{Aceleración}{imgEj2Accel}
 
 Para obtener mejores mediciones, hemos multiplicado por 100 los tamaños de matrices a ejecutar, de tal forma que las pequeñas variaciones que pueda introducir el SO no afecten tanto a la medición. También ejecutamos varias veces el bucle y obtenemos la media del tiempo de ejecución para evitar la aparición de medidas anómalas.
 
 \subsection*{Preguntas}
 
-\paragraph{En términos del tamaño de los vectores, ¿compensa siempre lanzar hilos para realizar el trabajo en paralelo, o hay casos en los que no?}
+\paragraph{En términos del tamaño de los vectores, ¿compensa siempre lanzar hilos para realizar el trabajo en paralelo, o hay casos en los que no?} 
 
+No siempre compensa lanzar varios hilos para ejecutar el trabajo. Cuando el tamaño del vector es pequeño, invertimos más tiempo en crear los hilos y lanzarlos del que ganamos por ejecutar la operación en paralelo. En estos casos, es más rápido no lanzar hilos porque nos evitamos la carga de creación de cada hilo.
+
+\paragraph{¿Se mejora el rendimiento al aumentar el número de hilos? ¿A qué se debe este efecto?} 
+
+Se aumenta el rendimiento hasta cierto punto. Primero tenemos que tener en cuenta el efecto anterior: la mejora obtenida por lanzar más hilos puede anularse por el tiempo que tardamos en crearlos cuando el tamaño del vector es pequeño.
+
+Por otra parte, la mejora deja de notarse cuando tenemos más hilos que núcleos virtuales tiene nuestro ordenador. Mientras mantengamos menos hilos que núcleos virtuales, cada hilo podrá ejecutarse al mismo tiempo "virtual"\footnote{El \textit{hyperthreading} crea dos núcleos virtuales para que un único procesador ejecute dos hilos a la vez, así que no se ejecutan al mismo tiempo realmente}. Sin embargo, cuando aumentamos el número de hilos por encima del número de núcleos virtuales, los hilos compiten entre ellos por tiempo de procesador, no se ejecutan al mismo tiempo, se fuerzan más cambios de contexto y el rendimiento puede disminuir.
+
+
+\section*{Ejercicio 3}
+
+\begin{table}[hbtp]
+\centering
+\input{tables/Ej3_tiempos.tex}
+\caption{Tiempos (en segundos) de las versiones de la multiplicación de matrices.}
+\label{tblEj3Tiempos}
+\end{table}
+
+
+\begin{table}[hbtp]
+\centering
+\input{tables/Ej3_accel.tex}
+\caption{Aceleración de las versiones de la multiplicación de matrices.}
+\label{tblEj3Accel}
+\end{table}
+
+\easyimg{img/ej3.png}{Tiempos de ejecución de las multiplicaciones de matrices.}{imgEj3Tiempos}
+\easyimg{img/ej3_acc.png}{Aceleración de las multiplicaciones de matrices.}{imgEj3Accel}
+La versión más rápida es la paralelización del bucle 3, el más externo, con cuatro hilos. En esta versión es en la que menos hilos se van a crear (en las otras versiones se crean de nuevo los hilos cada vez que se ejecuta el bucle exterior), y además al usar 4 hilos aprovechamos al máximo los cuatro núcleos virtuales del procesador.
+
+La peor versión es la de un hilo en el bucle más externo, aunque podríamos considerar las diferencias de tiempo mínimas y asumir que, en general, las versiones paralelas de un hilo son más lentas ya que se ejecuta la instrucción \texttt{\#pragma omp}, que repercute en el tiempo de ejecución, pero al no lanzar más hilos no hay ninguna ganancia de tiempo.
+
+Ignorando las versiones de un hilo, la peor versión es la paralelización del bucle más interno (1) con dos hilos. En este caso, se crean hilos con muchísima frecuencia (cada vez que se ejecuta el segundo bucle), lo que repercute mucho en el tiempo de ejecución. Además, al usar sólo dos hilos no aprovechamos todo el potencial de la CPU y no ganamos todo lo que podríamos ganar con más hilos.
+
+\easyimg{img/ej3b.png}{Comparación entre versión serie y la paralelización del bucle más externo (3) con 4 hilos}{imgEj3b}
+
+\easyimg{img/ej3b_acc.png}{Aceleración de la versión serie frente a la paralelización del bucle más externo (3) con 4 hilos}{imgEj3bAcc}
+
+En los primeros valores es más rápido \textit{serie} que la versión paralela debido a lo que hemos comentado antes de la carga provocada por la creación de cada hilo. Después, la versión paralela tarda menos.
 \end{document}
