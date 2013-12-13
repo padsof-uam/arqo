@@ -9,7 +9,7 @@ echo -e "Tamaño\tSerie\t\"Paralelo $best_paral $best_tnum hilos\""
 for i in $tams
 do
 	echo -ne "$i\t"
-	echo -n $(../bin/mults_$best_paral $i $best_tnum)
+	echo -n $(../bin/mults_0 $i $best_tnum)
 	echo -ne "\t"
 	echo -n $(../bin/mults_$best_paral $i $best_tnum)
 	echo
