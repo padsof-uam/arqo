@@ -1,6 +1,6 @@
 set terminal pngcairo
 set output 'imgs/ej3b_acc.png'
-set xtics mirror rotate by -45 scale 0.5 font ",9"
+set xtics mirror rotate by -4 5 scale 0.5 font ",9"
 set xlabel "Tamaño de la matriz"
 set ylabel "Tiempo de ejecución (s)"
 set key left
