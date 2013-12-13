@@ -90,5 +90,6 @@ if $makelatex ; then
 	./dat_to_tex.py $EJ3_DAT tables/Ej3_tiempos.tex
 	./dat_to_tex.py $EJ3_ACC_DAT tables/Ej3_accel.tex
 	./update_images
+	rm *pdf
 	latexmk -pdf -silent
 fi
