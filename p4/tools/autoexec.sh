@@ -24,8 +24,6 @@ do
 		do_ej2=false
 	elif [ $arg == "no3" ] ; then
 		do_ej3=false
-	elif [ $arg == "make" ] ; then
-		compile=true
 	elif [ $arg == "latex" ] ; then
 		makelatex=true
 	fi
@@ -51,12 +49,12 @@ plot () {
 	gnuplot -e "out_f='$img_out'; in_f='$in_file'; y_title='$title'; last_col=$last_col; x_title='$x_title'" $gps
 }
 
-if $compile ; then
-	cd ..
-	make clean
-	make
-	cd tools
-fi
+# Compile
+cd ..
+make clean
+make
+cd tools
+
 
 mkdir -p ../imgs
 mkdir -p ../data
