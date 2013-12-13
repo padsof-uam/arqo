@@ -43,7 +43,7 @@ No, las variables públicas son accesibles por todos los hilos y por lo tanto cu
 
 El resultado es correcto en la versión en serie y en la versión 2 de la paralela. La versión 1 paralela no funciona porque al final no suma los resultados parciales de cada uno de los hilos. Además, en la versión 2 puede haber errores de redondeo en los números de coma flotante debido a que suma en un orden distinto al de la versión serie.
 
-\easyimg{img/ej2_tiempos.png}{Tiempos de ejecución}{imgEj2Tiempos}
+\easyimg{img/ej2.png}{Tiempos de ejecución}{imgEj2Tiempos}
 \easyimg{img/ej2_acc.png}{Aceleración}{imgEj2Accel}
 
 Para obtener mejores mediciones, hemos multiplicado por 100 los tamaños de matrices a ejecutar, de tal forma que las pequeñas variaciones que pueda introducir el SO no afecten tanto a la medición. También ejecutamos varias veces el bucle y obtenemos la media del tiempo de ejecución para evitar la aparición de medidas anómalas.

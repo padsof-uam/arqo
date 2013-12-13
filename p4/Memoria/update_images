@@ -1,3 +1,2 @@
 #!/bin/bash
-cp -v ../Ejer2/imgs/* img/
-cp -v ../Ejer3/imgs/* img/
+cp -v ../imgs/* img
