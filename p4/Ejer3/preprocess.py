@@ -2,13 +2,26 @@
 import sys
 fname=sys.argv[1]
 f=open(fname,"r")
-fout=open("Ejer2_acc.dat","w")
+fout=open("Ejer3_acc.dat","w")
 fout.write(f.readline())
-for line in f.readlines()[1:]:
+
+refval_set = False
+refval = 0
+
+for line in f.readlines():
 	values=line.split('\t')
-	serie=float(values[1])
-	fout.write('{0}\t{1}'.format(values[0],1))
-	for value in map(float,values[2:]):
-		fout.write('\t{0}'.format(value/serie))
+
+	fout.write(values[0])
+	if not refval_set:
+		refval = float(values[1])
+		print 'setting reference value to {0}'.format(refval)
+		refval_set = True
+		fout.write('\t1')
+		values = values[2:]
+	else:
+		values = values[1:]
+
+	for value in map(float,values):
+		fout.write('\t{0:.6f}'.format(refval/value))
 	fout.write('\n')
 
